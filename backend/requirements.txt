@@ -1,0 +1,10 @@
+# new3.py (Streamlit app)
+pandas
+openpyxl
+streamlit
+rapidfuzz
+
+# api.py (FastAPI backend)
+fastapi
+uvicorn
+python-multipart
