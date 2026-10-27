@@ -137,10 +137,10 @@ export const HistoryView: React.FC<HistoryViewProps> = ({
       {/* 4 Summary Stat Cards */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 items-stretch gap-3">
         {/* Card 1: TOTAL JOBS EXECUTED */}
-        <div className="bg-white dark:bg-slate-900 border border-slate-200/90 dark:border-slate-800 border-t-[4px] border-t-[#45F0DF] rounded-sm p-3 shadow-xs flex flex-col">
+        <div className="bg-white dark:bg-slate-900 border border-slate-200/90 dark:border-slate-800 border-t-[4px] border-t-[#45F0DF] rounded-sm p-3 shadow-xs flex flex-col transition-all duration-200 hover:-translate-y-1 hover:shadow-lg hover:border-slate-300 dark:hover:border-slate-700">
           <div>
             <div className="flex items-start justify-between gap-3 mb-1">
-              <span className="max-w-[170px] text-xs leading-tight font-bold text-[#111D4A] dark:text-slate-200 uppercase tracking-wider">
+              <span className="max-w-[175px] text-[17px] leading-6 font-semibold text-[#4B4B55] dark:text-slate-200 uppercase tracking-[0.02em]">
                 TOTAL JOBS EXECUTED
               </span>
               <div className="w-8 h-8 rounded-lg bg-[#EEF0FF] dark:bg-slate-800 text-[#111D4A] dark:text-slate-200 flex items-center justify-center shrink-0">
@@ -149,7 +149,7 @@ export const HistoryView: React.FC<HistoryViewProps> = ({
             </div>
 
             <div className="flex flex-wrap items-baseline gap-x-2 gap-y-0">
-              <span className="text-3xl leading-tight font-extrabold text-[#17234F] dark:text-white tracking-tight">
+              <span className="text-3xl leading-tight font-bold text-[#17234F] dark:text-white tracking-tight">
                 {totalJobs.toLocaleString()}
               </span>
               {monthOverMonthChange !== null && (
@@ -164,7 +164,7 @@ export const HistoryView: React.FC<HistoryViewProps> = ({
         </div>
 
         {/* Card 2: RECORDS CONSOLIDATED */}
-        <div className="bg-white dark:bg-slate-900 border border-slate-200/90 dark:border-slate-800 border-t-[4px] border-t-[#535D94] rounded-sm p-3 shadow-xs flex flex-col">
+        <div className="bg-white dark:bg-slate-900 border border-slate-200/90 dark:border-slate-800 border-t-[4px] border-t-[#535D94] rounded-sm p-3 shadow-xs flex flex-col transition-all duration-200 hover:-translate-y-1 hover:shadow-lg hover:border-slate-300 dark:hover:border-slate-700">
           <div>
             <div className="flex items-start justify-between gap-3 mb-1">
               <span className="max-w-[175px] text-[17px] leading-6 font-semibold text-[#4B4B55] dark:text-slate-200 uppercase tracking-[0.02em]">
@@ -191,7 +191,7 @@ export const HistoryView: React.FC<HistoryViewProps> = ({
         </div>
 
         {/* Card 3: SUCCESSFUL MERGES */}
-        <div className="bg-white dark:bg-slate-900 border border-slate-200/90 dark:border-slate-800 border-t-[4px] border-t-[#00796B] rounded-sm p-3 shadow-xs flex flex-col">
+        <div className="bg-white dark:bg-slate-900 border border-slate-200/90 dark:border-slate-800 border-t-[4px] border-t-[#00796B] rounded-sm p-3 shadow-xs flex flex-col transition-all duration-200 hover:-translate-y-1 hover:shadow-lg hover:border-slate-300 dark:hover:border-slate-700">
           <div>
             <div className="flex items-start justify-between gap-3 mb-1">
               <span className="max-w-[175px] text-[17px] leading-6 font-semibold text-[#4B4B55] dark:text-slate-200 uppercase tracking-[0.02em]">
@@ -202,7 +202,7 @@ export const HistoryView: React.FC<HistoryViewProps> = ({
               </div>
             </div>
 
-            <div className="flex items-baseline gap-2 mt-1">
+            <div className="flex items-center justify-between gap-3 mt-1">
               <span className="text-3xl leading-tight font-bold text-[#17234F] dark:text-white tracking-tight">
                 {successfulJobs}
               </span>
@@ -215,7 +215,7 @@ export const HistoryView: React.FC<HistoryViewProps> = ({
         </div>
 
         {/* Card 4: FAILED / FLAGGED JOBS */}
-        <div className="bg-white dark:bg-slate-900 border border-slate-200/90 dark:border-slate-800 border-t-[4px] border-t-[#C91C24] rounded-sm p-3 shadow-xs flex flex-col">
+        <div className="bg-white dark:bg-slate-900 border border-slate-200/90 dark:border-slate-800 border-t-[4px] border-t-[#C91C24] rounded-sm p-3 shadow-xs flex flex-col transition-all duration-200 hover:-translate-y-1 hover:shadow-lg hover:border-slate-300 dark:hover:border-slate-700">
           <div>
             <div className="flex items-start justify-between gap-3 mb-1">
               <span className="max-w-[180px] text-[17px] leading-6 font-semibold text-[#C91C24] dark:text-red-300 uppercase tracking-[0.02em]">
@@ -226,7 +226,7 @@ export const HistoryView: React.FC<HistoryViewProps> = ({
               </div>
             </div>
 
-            <div className="flex flex-wrap items-baseline gap-2 mt-1">
+            <div className="flex items-center justify-between gap-3 mt-1">
               <span className="text-3xl leading-tight font-bold text-[#C91C24] dark:text-red-300 tracking-tight">
                 {flaggedJobs}
               </span>
@@ -240,17 +240,17 @@ export const HistoryView: React.FC<HistoryViewProps> = ({
       </div>
 
       {/* Main Table Container */}
-      <div className="bg-white dark:bg-slate-900 border border-slate-200/90 dark:border-slate-800 rounded-xl shadow-xs overflow-hidden">
+      <div className="bg-white dark:bg-slate-900 border border-[#D9DFEC] dark:border-slate-700 border-t-4 border-t-[#535D94] rounded-xl shadow-xs overflow-hidden">
         {/* Search & Filter Toolbar */}
         <div className="p-4 sm:px-6 sm:py-5 border-b border-slate-100 dark:border-slate-800 flex flex-col md:flex-row items-stretch md:items-center justify-between gap-4">
           <div className="relative flex-1 min-w-0 md:max-w-sm">
-            <Search className="w-[18px] h-[18px] absolute left-4 top-1/2 -translate-y-1/2 text-[#111D4A]/55 dark:text-slate-400" />
+            <Search className="w-[18px] h-[18px] absolute left-4 top-1/2 -translate-y-1/2 text-[#535D94] dark:text-slate-300" />
             <input
               type="text"
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
               placeholder="Search Job ID, merge name, operator, or file..."
-              className="w-full h-11 pl-11 pr-16 text-xs bg-[#F8F9FC] dark:bg-slate-800 border border-[#D9DFEC] dark:border-slate-700 rounded-lg text-[#111D4A] dark:text-white placeholder:text-slate-400 focus:outline-hidden focus:ring-2 focus:ring-[#111D4A]/20 focus:border-[#111D4A]"
+              className="w-full h-11 pl-11 pr-16 text-xs bg-[#F8F9FC] dark:bg-slate-800 border-2 border-[#9AA7C7] dark:border-slate-500 rounded-lg text-[#111D4A] dark:text-white placeholder:text-slate-500 dark:placeholder:text-slate-400 focus:outline-hidden focus:ring-2 focus:ring-[#535D94]/30 focus:border-[#535D94] dark:focus:border-slate-300"
             />
             <div className="absolute right-3 top-1/2 -translate-y-1/2 px-1.5 py-0.5 rounded bg-[#E9ECF4] dark:bg-slate-700 text-[10px] font-mono text-slate-500 dark:text-slate-400">
               ⌘ F
@@ -264,7 +264,7 @@ export const HistoryView: React.FC<HistoryViewProps> = ({
               <select
                 value={modeFilter}
                 onChange={(e) => setModeFilter(e.target.value)}
-                className="px-2.5 py-1.5 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg font-medium text-slate-700 dark:text-slate-300 focus:outline-hidden"
+                className="px-2.5 py-1.5 bg-white dark:bg-slate-800 border-2 border-[#9AA7C7] dark:border-slate-500 rounded-lg font-medium text-slate-700 dark:text-slate-300 focus:outline-hidden focus:ring-2 focus:ring-[#535D94]/30 focus:border-[#535D94]"
               >
                 <option value="ALL">All Merge Modes</option>
                 <option value="STRICT">Strict Chart-of-Accounts</option>
@@ -279,7 +279,7 @@ export const HistoryView: React.FC<HistoryViewProps> = ({
               <select
                 value={operatorFilter}
                 onChange={(e) => setOperatorFilter(e.target.value)}
-                className="px-2.5 py-1.5 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg font-medium text-slate-700 dark:text-slate-300 focus:outline-hidden"
+                className="px-2.5 py-1.5 bg-white dark:bg-slate-800 border-2 border-[#9AA7C7] dark:border-slate-500 rounded-lg font-medium text-slate-700 dark:text-slate-300 focus:outline-hidden focus:ring-2 focus:ring-[#535D94]/30 focus:border-[#535D94]"
               >
                 <option value="ALL">All Operators</option>
                 <option value="Priya Sharma">Priya Sharma</option>

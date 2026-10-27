@@ -14,8 +14,10 @@ import { HistoryView } from './components/HistoryView';
 import { CostAnalysisView } from './components/CostAnalysisView';
 import { AuditSealModal } from './components/AuditSealModal';
 import { Toast } from './components/Toast';
+import { AuthScreen } from './components/AuthScreen';
 import { downloadDatasetAsCsv } from './utils/exportUtils';
-import { getDashboardSummary, getJobs, getJobPreview, getJobSheets, uploadWorkbookBatch } from './lib/api';
+import { getCurrentUser, getDashboardSummary, getJobs, getJobPreview, getJobSheets, signOut, uploadWorkbookBatch } from './lib/api';
+import type { AuthUser } from './lib/api';
 
 const SLOT_STORAGE_KEY = 'account-tally-consolidation-slots-v1';
 const ACTIVE_TAB_STORAGE_KEY = 'account-tally-active-tab-v1';
@@ -164,6 +166,41 @@ const savePersistedSlotFiles = async (slots: ConsolidationSlot[]) => {
 };
 
 export default function App() {
+  const [user, setUser] = useState<AuthUser | null>(null);
+  const [checkingSession, setCheckingSession] = useState(true);
+
+  useEffect(() => {
+    let active = true;
+    void getCurrentUser()
+      .then(({ user: currentUser }) => { if (active) setUser(currentUser); })
+      .catch(() => { if (active) setUser(null); })
+      .finally(() => { if (active) setCheckingSession(false); });
+    return () => { active = false; };
+  }, []);
+
+  const handleSignOut = async () => {
+    try {
+      await signOut();
+    } catch (error) {
+      console.warn('Unable to revoke the server session during sign out.', error);
+    } finally {
+      setUser(null);
+    }
+  };
+
+  if (checkingSession) {
+    return <main className="min-h-screen bg-slate-950 flex items-center justify-center text-sm text-slate-400">Checking your session…</main>;
+  }
+
+  if (!user) {
+    const resetToken = new URLSearchParams(window.location.search).get('reset') || undefined;
+    return <AuthScreen key={resetToken || 'sign-in'} resetToken={resetToken} onSignedIn={setUser} />;
+  }
+
+  return <AuthenticatedApp user={user} onSignOut={() => { void handleSignOut(); }} />;
+}
+
+function AuthenticatedApp({ user, onSignOut }: { user: AuthUser; onSignOut: () => void }) {
   const [activeTab, setActiveTab] = useState<ActiveTab>('dashboard');
   const [isDark, setIsDark] = useState<boolean>(() => {
     return window.localStorage.getItem(THEME_STORAGE_KEY) === 'dark';
@@ -592,6 +629,8 @@ export default function App() {
       <div className="flex-1 lg:pl-64 flex flex-col min-w-0">
         {/* Top Header */}
         <Header
+          user={user}
+          onSignOut={onSignOut}
           activeTab={activeTab}
           setActiveTab={setActiveTab}
           isDark={isDark}

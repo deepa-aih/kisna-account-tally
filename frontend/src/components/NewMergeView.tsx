@@ -52,23 +52,12 @@ export const NewMergeView: React.FC<NewMergeViewProps> = ({
 
   const filledSlots = slots.filter((s) => s.status === 'READY');
   const filledCount = filledSlots.length;
-  const currentUpload = filledSlots.reduce<ConsolidationSlot | undefined>(
-    (latest, slot) => !latest || (slot.uploadedAt || 0) > (latest.uploadedAt || 0) ? slot : latest,
-    undefined
-  );
   const duplicateFingerprints = new Set(
     filledSlots
       .filter((slot) => slot.contentFingerprint)
       .map((slot) => slot.contentFingerprint!)
       .filter((fingerprint, index, fingerprints) => fingerprints.indexOf(fingerprint) !== index)
   );
-  const totalSizeMB = filledSlots
-    .reduce((acc, curr) => {
-      const match = curr.fileSize?.match(/([\d.]+)/);
-      return acc + (match ? parseFloat(match[1]) : 0);
-    }, 0)
-    .toFixed(1);
-
   const handleRemoveSlot = (id: number) => {
     setSlots((prev) =>
       prev.map((slot) => {
@@ -336,14 +325,6 @@ const FolderMark = ({ className }: { className?: string }) => (
   </svg>
 );
 
-const SheetFileMark = ({ className }: { className?: string }) => (
-  <svg viewBox="0 0 24 24" className={className} aria-hidden="true">
-    <path fill="#0C8F86" d="M6.2 2.4h8.1L19.8 8v12.6a1.4 1.4 0 0 1-1.4 1.4H6.2a1.4 1.4 0 0 1-1.4-1.4V3.8a1.4 1.4 0 0 1 1.4-1.4Z" />
-    <path fill="#D9FBF6" d="M14.3 2.4V8h5.5" />
-    <path stroke="#EFFFFC" strokeWidth="1.15" strokeLinecap="round" d="M7.6 11.4h8.2M7.6 14.2h8.2M7.6 17h8.2M10.6 11.4v5.6M13.6 11.4v5.6" />
-  </svg>
-);
-
   return (
     <div className="space-y-6">
       <div>
@@ -373,7 +354,7 @@ const SheetFileMark = ({ className }: { className?: string }) => (
           </span>
         </div>
 
-        <div className="flex items-center gap-4 text-xs text-slate-500 dark:text-slate-400">
+        <div className="flex flex-wrap items-center justify-end gap-4 text-xs text-slate-500 dark:text-slate-400">
           <div className="flex items-center gap-1.5">
             <span className="w-2 h-2 rounded-full bg-emerald-500 inline-block" />
             <span>Active</span>
@@ -382,6 +363,21 @@ const SheetFileMark = ({ className }: { className?: string }) => (
             <span className="w-2 h-2 rounded-full bg-slate-300 dark:bg-slate-600 inline-block" />
             <span>Empty</span>
           </div>
+          <button
+            onClick={handleRecheckSchema}
+            disabled={isCheckingSchema || filledCount === 0}
+            className="inline-flex items-center gap-1.5 text-slate-600 dark:text-slate-300 hover:text-indigo-600 dark:hover:text-indigo-400 font-medium transition-colors disabled:opacity-40"
+          >
+            <RefreshCw className={`w-3.5 h-3.5 ${isCheckingSchema ? 'animate-spin' : ''}`} />
+            <span>Check duplicate content</span>
+          </button>
+          <button
+            onClick={handleClearAll}
+            disabled={filledCount === 0}
+            className="text-red-600 dark:text-red-400 hover:text-red-700 font-medium transition-colors disabled:opacity-40"
+          >
+            Clear All
+          </button>
         </div>
       </div>
 
@@ -513,76 +509,6 @@ const SheetFileMark = ({ className }: { className?: string }) => (
             <span className="inline-flex items-center gap-1"><Check className="w-3 h-3 text-emerald-500" /> Max file size: 25 MB per workbook</span>
             <span className="inline-flex items-center gap-1"><Check className="w-3 h-3 text-emerald-500" /> 256-bit In-Memory Encryption</span>
           </div>
-        </div>
-      </div>
-
-      {/* Current upload and source readiness */}
-      <div className="border-t border-[#111D4A]/15">
-        <div className="p-4 sm:p-5 border-b border-slate-100 dark:border-slate-800 flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3">
-          <div className="flex items-center gap-3">
-            <h3 className="text-sm font-bold text-slate-900 dark:text-white">
-              Current Upload
-            </h3>
-            <span className="px-2.5 py-0.5 rounded-full text-xs font-semibold bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 font-mono">
-              {filledCount} of {slotNames.length} sources • {totalSizeMB} MB
-            </span>
-          </div>
-
-          <div className="flex items-center gap-4 text-xs">
-            <button
-              onClick={handleRecheckSchema}
-              disabled={isCheckingSchema || filledCount === 0}
-              className="inline-flex items-center gap-1.5 text-slate-600 dark:text-slate-300 hover:text-indigo-600 dark:hover:text-indigo-400 font-medium transition-colors disabled:opacity-40"
-            >
-              <RefreshCw className={`w-3.5 h-3.5 ${isCheckingSchema ? 'animate-spin' : ''}`} />
-              <span>Check duplicate content</span>
-            </button>
-            <span className="text-slate-300 dark:text-slate-700">•</span>
-            <button
-              onClick={handleClearAll}
-              disabled={filledCount === 0}
-              className="text-red-600 dark:text-red-400 hover:text-red-700 font-medium transition-colors disabled:opacity-40"
-            >
-              Clear All
-            </button>
-          </div>
-        </div>
-
-        <div className="p-4 sm:p-5 space-y-5">
-          <div className="rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50/70 dark:bg-slate-800/40 p-4">
-            {currentUpload ? (
-              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-                <div className="flex min-w-0 items-center gap-3">
-                  <SheetFileMark className="h-7 w-7 shrink-0" />
-                  <div className="min-w-0">
-                    <div className="text-[10px] font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400">
-                      Latest file added · {slotNames[currentUpload.id - 1]}
-                    </div>
-                    <div className="truncate text-sm font-semibold text-slate-900 dark:text-white" title={currentUpload.fileName}>
-                      {currentUpload.fileName}
-                    </div>
-                    <div className="mt-0.5 text-xs text-slate-500 dark:text-slate-400">
-                      {currentUpload.fileSize} · {currentUpload.sheetCount} sheet{currentUpload.sheetCount === 1 ? '' : 's'} · {currentUpload.rowCount?.toLocaleString()} rows · {currentUpload.colCount} columns
-                    </div>
-                  </div>
-                </div>
-                <button
-                  onClick={() => handleRemoveSlot(currentUpload.id)}
-                  type="button"
-                  aria-label="Remove current file"
-                  title="Remove current file"
-                  className="shrink-0 rounded-lg p-2 text-red-500 transition-colors hover:bg-red-50 hover:text-red-700 dark:text-red-400 dark:hover:bg-red-950/40 dark:hover:text-red-300"
-                >
-                  <Trash2 className="h-4 w-4" />
-                </button>
-              </div>
-            ) : (
-              <div className="py-2 text-center text-sm text-slate-500 dark:text-slate-400">
-                No current upload. Add a workbook above to begin.
-              </div>
-            )}
-          </div>
-
         </div>
       </div>
 

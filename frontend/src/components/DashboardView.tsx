@@ -247,7 +247,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
     <div className="space-y-6">
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <div className="text-sm font-normal text-slate-500 dark:text-slate-400 leading-tight">
+          <div className="text-sm font-medium text-slate-700 dark:text-slate-300 leading-tight">
             Welcome back, Priya
           </div>
           <h1 className="text-3xl font-bold text-slate-900 dark:text-white tracking-tight">
@@ -265,13 +265,13 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
       </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        <div className="bg-white dark:bg-slate-900 border border-slate-200/90 dark:border-slate-800 rounded-xl p-4 shadow-xs min-h-[180px]">
+        <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 border-t-4 border-t-[#45F0DF] rounded-xl p-4 shadow-xs min-h-[180px] transition-all duration-200 hover:-translate-y-1 hover:shadow-lg hover:border-slate-300 dark:hover:border-slate-700">
           <div>
             <div className="flex items-start justify-between gap-2">
-              <span className="text-[11px] font-semibold text-slate-400 dark:text-slate-500 uppercase tracking-wider leading-4">
+              <span className="text-[11px] font-semibold text-slate-600 dark:text-slate-300 uppercase tracking-wider leading-4">
                 Total merges<br />completed
               </span>
-              <div className="w-8 h-8 rounded-lg bg-slate-50 dark:bg-slate-800 text-slate-400 flex items-center justify-center shrink-0">
+              <div className="w-8 h-8 rounded-lg bg-[#E8ECFA] dark:bg-slate-800 text-[#535D94] dark:text-slate-300 flex items-center justify-center shrink-0">
                 <Layers className="w-4 h-4" />
               </div>
             </div>
@@ -286,7 +286,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
                 <path d={spark.path} stroke="#CBD5E1" strokeWidth="1.6" strokeLinecap="round" vectorEffect="non-scaling-stroke" />
                 <circle cx={spark.end.x} cy={spark.end.y} r="2.2" fill="#111D4A" />
               </svg>
-              <div className="absolute left-0 top-1/2 -translate-y-1/2 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 shadow-sm rounded-md px-2 py-1 text-[11px] text-slate-500">
+              <div className="absolute left-0 top-1/2 -translate-y-1/2 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 shadow-sm rounded-md px-2 py-1 text-[11px] text-slate-700 dark:text-slate-300">
                 <span className="font-semibold text-slate-800 dark:text-slate-100">{kpis.jobsThisWeek.toLocaleString()}</span>{' '}
                 {kpis.jobsThisWeek === 1 ? 'job' : 'jobs'} this week
               </div>
@@ -294,13 +294,13 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
           </div>
         </div>
 
-        <div className="bg-white dark:bg-slate-900 border border-slate-200/90 dark:border-slate-800 rounded-xl p-4 shadow-xs min-h-[180px]">
+        <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 border-t-4 border-t-[#535D94] rounded-xl p-4 shadow-xs min-h-[180px] transition-all duration-200 hover:-translate-y-1 hover:shadow-lg hover:border-slate-300 dark:hover:border-slate-700">
           <div>
             <div className="flex items-start justify-between gap-2">
-              <span className="text-[11px] font-semibold text-slate-400 dark:text-slate-500 uppercase tracking-wider leading-4">
+              <span className="text-[11px] font-semibold text-slate-600 dark:text-slate-300 uppercase tracking-wider leading-4">
                 Files processed &amp;<br />ingested
               </span>
-              <div className="w-8 h-8 rounded-lg bg-slate-50 dark:bg-slate-800 text-slate-400 flex items-center justify-center shrink-0">
+              <div className="w-8 h-8 rounded-lg bg-[#E8ECFA] dark:bg-slate-800 text-[#535D94] dark:text-slate-300 flex items-center justify-center shrink-0">
                 <FileSpreadsheet className="w-4 h-4" />
               </div>
             </div>
@@ -315,9 +315,9 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
                 <div className="text-sm font-semibold text-slate-800 dark:text-slate-100">
                   Avg {kpis.avgSheetsPerFile == null ? '—' : kpis.avgSheetsPerFile.toFixed(1)}
                 </div>
-                <div className="text-[11px] text-slate-400">sheets/file</div>
+                <div className="text-[11px] text-slate-600 dark:text-slate-400">sheets/file</div>
               </div>
-              <div className="text-right text-[11px] text-slate-500 leading-5">
+              <div className="text-right text-[11px] text-slate-700 dark:text-slate-300 leading-5">
                 <div><span className="font-semibold text-slate-700 dark:text-slate-200">{kpis.xlsxCount.toLocaleString()}</span> .xlsx</div>
                 <div><span className="font-semibold text-slate-700 dark:text-slate-200">{kpis.xlsCount.toLocaleString()}</span> .xls</div>
               </div>
@@ -325,13 +325,13 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
           </div>
         </div>
 
-        <div className="bg-white dark:bg-slate-900 border border-slate-200/90 dark:border-slate-800 rounded-xl p-4 shadow-xs min-h-[180px]">
+        <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 border-t-4 border-t-[#00796B] rounded-xl p-4 shadow-xs min-h-[180px] transition-all duration-200 hover:-translate-y-1 hover:shadow-lg hover:border-slate-300 dark:hover:border-slate-700">
           <div>
             <div className="flex items-start justify-between gap-2">
-              <span className="text-[11px] font-semibold text-slate-400 dark:text-slate-500 uppercase tracking-wider leading-4">
+              <span className="text-[11px] font-semibold text-slate-600 dark:text-slate-300 uppercase tracking-wider leading-4">
                 Operational time<br />saved
               </span>
-              <div className="w-8 h-8 rounded-lg bg-slate-50 dark:bg-slate-800 text-slate-400 flex items-center justify-center shrink-0">
+              <div className="w-8 h-8 rounded-lg bg-emerald-50 dark:bg-slate-800 text-[#00796B] dark:text-teal-300 flex items-center justify-center shrink-0">
                 <Clock className="w-4 h-4" />
               </div>
             </div>
@@ -341,23 +341,23 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
               </span>
               <TrendBadge value={kpis.timeTrendPct} icon="zap" />
             </div>
-            <div className="text-sm text-slate-500 dark:text-slate-400">hrs</div>
+            <div className="text-sm text-slate-600 dark:text-slate-300">hrs</div>
             <div className="mt-3 flex items-center justify-between gap-2">
               <span className="inline-flex items-center bg-emerald-50 dark:bg-emerald-950/50 text-emerald-700 dark:text-emerald-300 text-[11px] font-semibold px-2 py-1 rounded-md">
                 ${kpis.laborSaved.toLocaleString()} labor saved
               </span>
-              <span className="text-[11px] text-slate-500">{Math.round(kpis.avgRunSeconds)}s avg/run</span>
+              <span className="text-[11px] text-slate-600 dark:text-slate-300">{Math.round(kpis.avgRunSeconds)}s avg/run</span>
             </div>
           </div>
         </div>
 
-        <div className="bg-white dark:bg-slate-900 border border-slate-200/90 dark:border-slate-800 rounded-xl p-4 shadow-xs min-h-[180px]">
+        <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 border-t-4 border-t-[#C91C24] rounded-xl p-4 shadow-xs min-h-[180px] transition-all duration-200 hover:-translate-y-1 hover:shadow-lg hover:border-slate-300 dark:hover:border-slate-700">
           <div>
             <div className="flex items-start justify-between gap-2">
-              <span className="text-[11px] font-semibold text-slate-400 dark:text-slate-500 uppercase tracking-wider leading-4">
+              <span className="text-[11px] font-semibold text-slate-600 dark:text-slate-300 uppercase tracking-wider leading-4">
                 Aggregate quality<br />score
               </span>
-              <div className="w-8 h-8 rounded-lg bg-slate-50 dark:bg-slate-800 text-slate-400 flex items-center justify-center shrink-0">
+              <div className="w-8 h-8 rounded-lg bg-red-50 dark:bg-slate-800 text-[#C91C24] dark:text-red-300 flex items-center justify-center shrink-0">
                 <ShieldCheck className="w-4 h-4" />
               </div>
             </div>
@@ -367,14 +367,11 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
               </span>
               <TrendBadge value={kpis.qualityTrendPct} icon="trend" />
             </div>
-            <div className="mt-4 flex items-center justify-between gap-2 text-[11px]">
+            <div className="mt-6 flex items-center gap-2 text-[11px]">
               <span className="inline-flex items-center gap-1.5 min-w-0">
                 <span className={`w-2 h-2 rounded-full shrink-0 ${kpis.deterministicValid ? 'bg-emerald-400' : 'bg-amber-400'}`} />
-                <span className="text-slate-500">Deterministic</span>
+                <span className="text-slate-700 dark:text-slate-300">Deterministic</span>
                 <span className="font-semibold text-slate-800 dark:text-slate-100">{kpis.deterministicValid ? 'Valid' : 'Review'}</span>
-              </span>
-              <span className="text-slate-400 text-right">
-                {kpis.dupePct.toFixed(1)}% dupes · {kpis.patchedPct.toFixed(1)}% patched
               </span>
             </div>
           </div>
@@ -382,9 +379,9 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
       </div>
 
       {/* Main Content: Recent Files Table Container */}
-      <div className="bg-white dark:bg-slate-900 border border-slate-200/90 dark:border-slate-800 rounded-xl shadow-xs overflow-hidden">
+      <div className="bg-white dark:bg-slate-900 border border-[#D9DFEC] dark:border-slate-700 border-t-4 border-t-[#535D94] rounded-xl shadow-xs overflow-hidden">
         {/* Table Top Header Bar */}
-        <div className="p-4 sm:p-5 border-b border-slate-100 dark:border-slate-800 flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3">
+        <div className="p-4 sm:p-5 bg-[#F8F9FC] dark:bg-slate-900/80 border-b border-[#D9DFEC] dark:border-slate-700 flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3">
           <div className="flex items-center gap-2.5">
             <div className="w-9 h-9 rounded-lg bg-[#111D4A] flex items-center justify-center shrink-0">
               <svg viewBox="0 0 24 24" className="w-5 h-5" fill="none" aria-hidden="true">
@@ -401,13 +398,13 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
           {/* Search & Filter Toolbar */}
           <div className="flex items-center gap-2">
             <div className="relative flex-1 sm:w-72">
-              <Search className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
+              <Search className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-slate-600 dark:text-slate-300" />
               <input
                 type="text"
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
                 placeholder="Search file or job name..."
-                className="w-full pl-9 pr-3 py-1.5 text-xs bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg text-slate-900 dark:text-white placeholder-slate-400 focus:outline-hidden focus:ring-1 focus:ring-indigo-500"
+                className="w-full pl-9 pr-3 py-1.5 text-xs bg-[#F8F9FC] dark:bg-slate-800 border-2 border-[#9AA7C7] dark:border-slate-500 rounded-lg text-slate-900 dark:text-white placeholder:text-slate-500 dark:placeholder:text-slate-400 focus:outline-hidden focus:ring-2 focus:ring-[#535D94]/30 focus:border-[#535D94] dark:focus:border-slate-300"
               />
               {searchTerm && (
                 <button
@@ -461,7 +458,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
         {/* Table Viewport */}
         <div className="overflow-x-auto">
           <table className="w-full text-left text-xs">
-            <thead className="bg-[#F1F1FC] dark:bg-slate-800/50 text-[11px] font-semibold text-slate-400 dark:text-slate-500 uppercase tracking-wider border-b border-slate-100 dark:border-slate-800">
+            <thead className="bg-[#F1F1FC] dark:bg-slate-800/70 text-[11px] font-semibold text-slate-600 dark:text-slate-300 uppercase tracking-wider border-b border-slate-200 dark:border-slate-700">
               <tr>
                 <th className="py-3 px-6">FILE / BATCH NAME</th>
                 <th className="py-3 px-6 text-right font-mono">TOTAL ROWS</th>
@@ -473,7 +470,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
             <tbody className="divide-y divide-slate-100 dark:divide-slate-800">
               {filteredFiles.length === 0 ? (
                 <tr>
-                  <td colSpan={5} className="py-8 text-center text-slate-400 dark:text-slate-500">
+                  <td colSpan={5} className="py-8 text-center text-slate-600 dark:text-slate-400">
                     No files found matching criteria.
                   </td>
                 </tr>
@@ -496,7 +493,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
                           <div className="font-semibold text-slate-900 dark:text-white group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors">
                             {file.name}
                           </div>
-                          <div className="text-[11px] text-slate-400 dark:text-slate-500">
+                          <div className="text-[11px] text-slate-600 dark:text-slate-400">
                             {file.fileSize} • Batch SHA-verified
                           </div>
                         </div>
@@ -507,7 +504,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
                       {file.totalRows.toLocaleString()}
                     </td>
 
-                    <td className="py-3.5 px-6 text-slate-500 dark:text-slate-400 font-mono text-[11px]">
+                    <td className="py-3.5 px-6 text-slate-700 dark:text-slate-300 font-mono text-[11px]">
                       <span>{file.processingDate}</span>
                       <span className="mx-1.5 text-slate-300 dark:text-slate-600">•</span>
                       <span>{file.durationSeconds.toFixed(1)}s</span>
@@ -566,7 +563,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
         </div>
 
         {/* Table Footer with Pagination */}
-        <div className="p-4 border-t border-slate-100 dark:border-slate-800 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-slate-500 dark:text-slate-400">
+        <div className="p-4 border-t border-slate-100 dark:border-slate-800 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-slate-700 dark:text-slate-300">
           <div>
             Showing{' '}
             <span className="font-semibold text-slate-700 dark:text-slate-300">{filteredFiles.length}</span> of{' '}

@@ -6,12 +6,12 @@ import {
   ArrowLeft,
   Menu,
   ChevronDown,
-  User,
   ShieldCheck,
   Settings,
   LogOut,
 } from 'lucide-react';
-import avatarImg from '../assets/images/avatar_priya_sharma_1792062882229.jpg';
+import type { AuthUser } from '../lib/api';
+import { AdminUsersModal } from './AdminUsersModal';
 
 interface HeaderProps {
   activeTab: ActiveTab;
@@ -21,6 +21,8 @@ interface HeaderProps {
   setIsOpenMobile: (open: boolean) => void;
   onDownloadConsolidated?: () => void;
   selectedFileName?: string;
+  user: AuthUser;
+  onSignOut: () => void;
 }
 
 export const Header: React.FC<HeaderProps> = ({
@@ -31,8 +33,12 @@ export const Header: React.FC<HeaderProps> = ({
   setIsOpenMobile,
   onDownloadConsolidated,
   selectedFileName = 'Q2_Global_OpEx_Consolidated.xlsx',
+  user,
+  onSignOut,
 }) => {
   const [isProfileOpen, setIsProfileOpen] = useState(false);
+  const [isUserManagerOpen, setIsUserManagerOpen] = useState(false);
+  const initials = user.name.split(/\s+/).map((part) => part[0]).slice(0, 2).join('').toUpperCase();
 
   return (
     <>
@@ -80,24 +86,15 @@ export const Header: React.FC<HeaderProps> = ({
             onClick={() => setIsProfileOpen(!isProfileOpen)}
             className="flex items-center gap-2.5 p-1 sm:pr-2.5 rounded-full sm:rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors text-left"
           >
-            <div className="relative w-8 h-8 rounded-full overflow-hidden ring-1 ring-slate-200 dark:ring-slate-700 bg-slate-200 shrink-0">
-              <img
-                src={avatarImg}
-                alt="Priya Sharma"
-                referrerPolicy="no-referrer"
-                className="w-full h-full object-cover"
-                onError={(e) => {
-                  (e.currentTarget as HTMLImageElement).src =
-                    'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32"><rect width="32" height="32" fill="%234338ca"/><text x="50%" y="55%" dominant-baseline="middle" text-anchor="middle" fill="white" font-size="12" font-family="sans-serif" font-weight="bold">PS</text></svg>';
-                }}
-              />
+            <div className="relative flex w-8 h-8 items-center justify-center rounded-full ring-1 ring-slate-200 dark:ring-slate-700 bg-indigo-700 text-xs font-semibold text-white shrink-0">
+              {initials || 'U'}
             </div>
             <div className="hidden sm:block text-left">
               <div className="text-xs font-semibold text-slate-900 dark:text-white leading-tight">
-                Priya Sharma
+                {user.name}
               </div>
               <div className="text-[10px] font-medium text-slate-400 dark:text-slate-400 tracking-wider">
-                LEAD MIS ANALYST
+                {user.role === 'admin' ? 'ADMINISTRATOR' : user.email}
               </div>
             </div>
             <ChevronDown className="w-3.5 h-3.5 text-slate-400 hidden sm:block" />
@@ -107,46 +104,42 @@ export const Header: React.FC<HeaderProps> = ({
           {isProfileOpen && (
             <div className="absolute right-0 mt-2 w-56 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl shadow-lg py-1.5 z-50 text-xs">
               <div className="px-3.5 py-2 border-b border-slate-100 dark:border-slate-700">
-                <div className="font-semibold text-slate-900 dark:text-white">Priya Sharma</div>
-                <div className="text-slate-500 dark:text-slate-400 text-[11px]">priya.sharma@accountstelly.internal</div>
+                <div className="font-semibold text-slate-900 dark:text-white">{user.name}</div>
+                <div className="text-slate-500 dark:text-slate-400 text-[11px]">{user.email}</div>
                 <div className="mt-1 inline-flex items-center gap-1 text-[10px] text-emerald-600 dark:text-emerald-400 font-medium">
                   <ShieldCheck className="w-3 h-3" />
-                  <span>Security Clearance Level 4</span>
+                  <span>{user.clientName} workspace · {user.role}</span>
                 </div>
               </div>
-              <button
-                onClick={() => {
-                  setIsProfileOpen(false);
-                  setActiveTab('history');
-                }}
-                className="w-full text-left px-3.5 py-2 hover:bg-slate-50 dark:hover:bg-slate-700/60 flex items-center gap-2 text-slate-700 dark:text-slate-200"
-              >
-                <User className="w-3.5 h-3.5 text-slate-400" />
-                <span>My Consolidations & Logs</span>
-              </button>
-              <button
-                onClick={() => {
-                  setIsProfileOpen(false);
-                  setActiveTab('cost-analysis');
-                }}
-                className="w-full text-left px-3.5 py-2 hover:bg-slate-50 dark:hover:bg-slate-700/60 flex items-center gap-2 text-slate-700 dark:text-slate-200"
-              >
-                <Settings className="w-3.5 h-3.5 text-slate-400" />
-                <span>Department Benchmarks</span>
-              </button>
+              {user.role === 'admin' && (
+                <button
+                  onClick={() => {
+                    setIsProfileOpen(false);
+                    setIsUserManagerOpen(true);
+                  }}
+                  className="w-full text-left px-3.5 py-2 hover:bg-slate-50 dark:hover:bg-slate-700/60 flex items-center gap-2 text-slate-700 dark:text-slate-200"
+                >
+                  <Settings className="w-3.5 h-3.5 text-slate-400" />
+                  <span>Manage users</span>
+                </button>
+              )}
               <div className="border-t border-slate-100 dark:border-slate-700 my-1" />
               <button
-                onClick={() => setIsProfileOpen(false)}
+                onClick={() => {
+                  setIsProfileOpen(false);
+                  onSignOut();
+                }}
                 className="w-full text-left px-3.5 py-2 hover:bg-red-50 dark:hover:bg-red-950/30 flex items-center gap-2 text-red-600 dark:text-red-400"
               >
                 <LogOut className="w-3.5 h-3.5" />
-                <span>End Active Session</span>
+                <span>Sign out</span>
               </button>
             </div>
           )}
         </div>
       </div>
     </header>
+    {isUserManagerOpen && <AdminUsersModal onClose={() => setIsUserManagerOpen(false)} />}
     {activeTab === 'viewer' && (
       <div className="bg-white/95 dark:bg-slate-900/95 border-b border-slate-200/80 dark:border-slate-800 px-4 sm:px-8 py-5 flex items-center justify-between gap-4 transition-colors">
         <div className="flex flex-col items-start gap-3 min-w-0">
