@@ -16,8 +16,11 @@ WORKDIR /app
 COPY backend/work/requirements.txt ./requirements.txt
 RUN pip install --no-cache-dir -r requirements.txt
 
+# COPY backend/work/api.py backend/work/db.py ./
 COPY backend/work/api.py backend/work/db.py \
      backend/work/create_user.py backend/work/grant_admin.py ./
+     backend/work/create_reset_link.py
+     
 COPY --from=frontend-build /frontend/dist ./static
 
 EXPOSE 9104
