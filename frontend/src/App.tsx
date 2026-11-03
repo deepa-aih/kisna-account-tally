@@ -644,6 +644,7 @@ function AuthenticatedApp({ user, onSignOut }: { user: AuthUser; onSignOut: () =
         <main className="flex-1 p-4 sm:p-8 max-w-7xl w-full mx-auto">
           {activeTab === 'dashboard' && (
             <DashboardView
+              userName={user.name}
               recentFiles={recentFiles}
               jobs={jobs}
               dashboardSummary={dashboardSummary}

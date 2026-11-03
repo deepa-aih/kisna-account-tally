@@ -28,6 +28,7 @@ interface DashboardSummary {
 }
 
 interface DashboardViewProps {
+  userName: string;
   recentFiles: RecentFile[];
   jobs: HistoryJob[];
   dashboardSummary: DashboardSummary;
@@ -176,18 +177,8 @@ const TrendBadge = ({ value, icon }: { value: number; icon?: 'arrow' | 'zap' | '
   );
 };
 
-const sparklineGeometry = (values: number[]) => {
-  const max = Math.max(...values, 1);
-  const points = values.map((value, index) => {
-    const x = values.length === 1 ? 100 : (index / (values.length - 1)) * 100;
-    const y = 22 - (value / max) * 14;
-    return { x, y };
-  });
-  const path = points.map((point, index) => `${index === 0 ? 'M' : 'L'} ${point.x.toFixed(1)} ${point.y.toFixed(1)}`).join(' ');
-  return { path, end: points[points.length - 1] || { x: 100, y: 18 } };
-};
-
 export const DashboardView: React.FC<DashboardViewProps> = ({
+  userName,
   recentFiles,
   jobs,
   dashboardSummary,
@@ -202,7 +193,6 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
   const [downloadingFileId, setDownloadingFileId] = useState<string | null>(null);
 
   const kpis = dashboardSummary.kpis ?? buildKpis(jobs, dashboardSummary);
-  const spark = sparklineGeometry(kpis.sparkline.length ? kpis.sparkline : [0, 0, 0, 0, 0, 0, 0]);
   const hoursSavedLabel = kpis.hoursSaved.toFixed(1);
 
   const filteredFiles = recentFiles.filter((file) => {
@@ -248,7 +238,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
           <div className="text-sm font-medium text-slate-700 dark:text-slate-300 leading-tight">
-            Welcome back, Priya
+            Welcome back, {userName}
           </div>
           <h1 className="text-3xl font-bold text-slate-900 dark:text-white tracking-tight">
             Dashboard
@@ -265,7 +255,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
       </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 border-t-4 border-t-[#45F0DF] rounded-xl p-4 shadow-xs min-h-[180px] transition-all duration-200 hover:-translate-y-1 hover:shadow-lg hover:border-slate-300 dark:hover:border-slate-700">
+        <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 border-t-4 border-t-[#45F0DF] rounded-xl p-4 shadow-xs min-h-[160px] transition-all duration-200 hover:-translate-y-1 hover:shadow-lg hover:border-slate-300 dark:hover:border-slate-700">
           <div>
             <div className="flex items-start justify-between gap-2">
               <span className="text-[11px] font-semibold text-slate-600 dark:text-slate-300 uppercase tracking-wider leading-4">
@@ -281,20 +271,10 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
               </span>
               <TrendBadge value={kpis.mergeTrendPct} />
             </div>
-            <div className="relative mt-4 h-10">
-              <svg className="absolute inset-0 w-full h-full" viewBox="0 0 100 28" fill="none" preserveAspectRatio="none">
-                <path d={spark.path} stroke="#CBD5E1" strokeWidth="1.6" strokeLinecap="round" vectorEffect="non-scaling-stroke" />
-                <circle cx={spark.end.x} cy={spark.end.y} r="2.2" fill="#111D4A" />
-              </svg>
-              <div className="absolute left-0 top-1/2 -translate-y-1/2 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 shadow-sm rounded-md px-2 py-1 text-[11px] text-slate-700 dark:text-slate-300">
-                <span className="font-semibold text-slate-800 dark:text-slate-100">{kpis.jobsThisWeek.toLocaleString()}</span>{' '}
-                {kpis.jobsThisWeek === 1 ? 'job' : 'jobs'} this week
-              </div>
-            </div>
           </div>
         </div>
 
-        <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 border-t-4 border-t-[#535D94] rounded-xl p-4 shadow-xs min-h-[180px] transition-all duration-200 hover:-translate-y-1 hover:shadow-lg hover:border-slate-300 dark:hover:border-slate-700">
+        <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 border-t-4 border-t-[#535D94] rounded-xl p-4 shadow-xs min-h-[160px] transition-all duration-200 hover:-translate-y-1 hover:shadow-lg hover:border-slate-300 dark:hover:border-slate-700">
           <div>
             <div className="flex items-start justify-between gap-2">
               <span className="text-[11px] font-semibold text-slate-600 dark:text-slate-300 uppercase tracking-wider leading-4">
@@ -310,22 +290,10 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
               </span>
               <TrendBadge value={kpis.filesTrendPct} />
             </div>
-            <div className="mt-4 flex items-end justify-between gap-3">
-              <div>
-                <div className="text-sm font-semibold text-slate-800 dark:text-slate-100">
-                  Avg {kpis.avgSheetsPerFile == null ? '—' : kpis.avgSheetsPerFile.toFixed(1)}
-                </div>
-                <div className="text-[11px] text-slate-600 dark:text-slate-400">sheets/file</div>
-              </div>
-              <div className="text-right text-[11px] text-slate-700 dark:text-slate-300 leading-5">
-                <div><span className="font-semibold text-slate-700 dark:text-slate-200">{kpis.xlsxCount.toLocaleString()}</span> .xlsx</div>
-                <div><span className="font-semibold text-slate-700 dark:text-slate-200">{kpis.xlsCount.toLocaleString()}</span> .xls</div>
-              </div>
-            </div>
           </div>
         </div>
 
-        <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 border-t-4 border-t-[#00796B] rounded-xl p-4 shadow-xs min-h-[180px] transition-all duration-200 hover:-translate-y-1 hover:shadow-lg hover:border-slate-300 dark:hover:border-slate-700">
+        <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 border-t-4 border-t-[#00796B] rounded-xl p-4 shadow-xs min-h-[160px] transition-all duration-200 hover:-translate-y-1 hover:shadow-lg hover:border-slate-300 dark:hover:border-slate-700">
           <div>
             <div className="flex items-start justify-between gap-2">
               <span className="text-[11px] font-semibold text-slate-600 dark:text-slate-300 uppercase tracking-wider leading-4">
@@ -342,16 +310,10 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
               <TrendBadge value={kpis.timeTrendPct} icon="zap" />
             </div>
             <div className="text-sm text-slate-600 dark:text-slate-300">hrs</div>
-            <div className="mt-3 flex items-center justify-between gap-2">
-              <span className="inline-flex items-center bg-emerald-50 dark:bg-emerald-950/50 text-emerald-700 dark:text-emerald-300 text-[11px] font-semibold px-2 py-1 rounded-md">
-                ${kpis.laborSaved.toLocaleString()} labor saved
-              </span>
-              <span className="text-[11px] text-slate-600 dark:text-slate-300">{Math.round(kpis.avgRunSeconds)}s avg/run</span>
-            </div>
           </div>
         </div>
 
-        <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 border-t-4 border-t-[#C91C24] rounded-xl p-4 shadow-xs min-h-[180px] transition-all duration-200 hover:-translate-y-1 hover:shadow-lg hover:border-slate-300 dark:hover:border-slate-700">
+        <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 border-t-4 border-t-[#C91C24] rounded-xl p-4 shadow-xs min-h-[160px] transition-all duration-200 hover:-translate-y-1 hover:shadow-lg hover:border-slate-300 dark:hover:border-slate-700">
           <div>
             <div className="flex items-start justify-between gap-2">
               <span className="text-[11px] font-semibold text-slate-600 dark:text-slate-300 uppercase tracking-wider leading-4">
@@ -366,13 +328,6 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
                 {kpis.qualityScore.toFixed(1)}%
               </span>
               <TrendBadge value={kpis.qualityTrendPct} icon="trend" />
-            </div>
-            <div className="mt-6 flex items-center gap-2 text-[11px]">
-              <span className="inline-flex items-center gap-1.5 min-w-0">
-                <span className={`w-2 h-2 rounded-full shrink-0 ${kpis.deterministicValid ? 'bg-emerald-400' : 'bg-amber-400'}`} />
-                <span className="text-slate-700 dark:text-slate-300">Deterministic</span>
-                <span className="font-semibold text-slate-800 dark:text-slate-100">{kpis.deterministicValid ? 'Valid' : 'Review'}</span>
-              </span>
             </div>
           </div>
         </div>
