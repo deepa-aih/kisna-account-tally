@@ -83,6 +83,10 @@ export async function createManagedUser(name: string, email: string) {
   });
 }
 
+export async function deleteManagedUser(userId: string) {
+  return apiRequest<{ ok: boolean }>(`/admin/users/${userId}`, { method: 'DELETE' });
+}
+
 export async function createUserResetLink(userId: string) {
   return apiRequest<{ resetLink: string; expiresInSeconds: number }>(`/admin/users/${userId}/reset-link`, {
     method: 'POST',

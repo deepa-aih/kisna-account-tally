@@ -183,6 +183,29 @@ def admin_create_reset_link(user_id: str, admin=Depends(_require_admin)):
     return {"resetLink": reset_link, "expiresInSeconds": 1800}
 
 
+@app.delete("/admin/users/{user_id}")
+def admin_delete_user(user_id: str, admin=Depends(_require_admin)):
+    if user_id == admin["id"]:
+        raise HTTPException(status_code=400, detail="You cannot delete your own account.")
+
+    database = get_database()
+    user = database.users.find_one({"id": user_id}, {"_id": 0, "id": 1, "role": 1, "active": 1})
+    if not user:
+        raise HTTPException(status_code=404, detail="User not found.")
+
+    if user.get("role") == "admin" and user.get("active") is True:
+        active_admin_count = database.users.count_documents({"role": "admin", "active": True})
+        if active_admin_count <= 1:
+            raise HTTPException(status_code=409, detail="You cannot delete the last active administrator.")
+
+    database.sessions.delete_many({"user_id": user_id})
+    database.password_resets.delete_many({"user_id": user_id})
+    result = database.users.delete_one({"id": user_id})
+    if result.deleted_count != 1:
+        raise HTTPException(status_code=404, detail="User not found.")
+    return {"ok": True}
+
+
 @app.post("/auth/logout")
 def logout(request: Request, response: Response):
     token = request.cookies.get(SESSION_COOKIE)

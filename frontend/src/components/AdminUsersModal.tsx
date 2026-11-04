@@ -1,12 +1,13 @@
 import React, { FormEvent, useEffect, useState } from 'react';
-import { Copy, Link2, LoaderCircle, UserPlus, X } from 'lucide-react';
-import { createManagedUser, createUserResetLink, getManagedUsers, ManagedUser } from '../lib/api';
+import { Copy, Link2, LoaderCircle, Trash2, UserPlus, X } from 'lucide-react';
+import { createManagedUser, createUserResetLink, deleteManagedUser, getManagedUsers, ManagedUser } from '../lib/api';
 
 interface AdminUsersModalProps {
+  currentUserId: string;
   onClose: () => void;
 }
 
-export const AdminUsersModal: React.FC<AdminUsersModalProps> = ({ onClose }) => {
+export const AdminUsersModal: React.FC<AdminUsersModalProps> = ({ currentUserId, onClose }) => {
   const [users, setUsers] = useState<ManagedUser[]>([]);
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
@@ -51,6 +52,26 @@ export const AdminUsersModal: React.FC<AdminUsersModalProps> = ({ onClose }) => 
     } catch (resetError) {
       setError(resetError instanceof Error ? resetError.message : 'Could not create a reset link.');
       setMessage('');
+    } finally {
+      setBusy(false);
+    }
+  };
+
+  const handleDeleteUser = async (user: ManagedUser) => {
+    if (!window.confirm(`Permanently delete ${user.email}? This will revoke their sessions and remove their account. This cannot be undone.`)) {
+      return;
+    }
+
+    setBusy(true);
+    setError('');
+    setMessage('');
+    setResetLink('');
+    try {
+      await deleteManagedUser(user.id);
+      setMessage(`Account permanently deleted for ${user.email}.`);
+      await refreshUsers();
+    } catch (deleteError) {
+      setError(deleteError instanceof Error ? deleteError.message : 'Could not delete the account.');
     } finally {
       setBusy(false);
     }
@@ -110,15 +131,27 @@ export const AdminUsersModal: React.FC<AdminUsersModalProps> = ({ onClose }) => 
                     <p className="truncate text-sm font-medium">{user.name} <span className="ml-1 text-xs font-normal text-slate-500">{user.role === 'admin' ? 'Admin' : 'Member'}</span></p>
                     <p className="truncate text-xs text-slate-400">{user.email}</p>
                   </div>
-                  <button disabled={busy || !user.active} onClick={() => void handleResetLink(user)} className="shrink-0 rounded-lg border border-slate-700 px-3 py-2 text-xs font-medium text-slate-200 hover:border-emerald-600 hover:text-emerald-300 disabled:opacity-50">
-                    Generate reset link
-                  </button>
+                  <div className="flex shrink-0 items-center gap-2">
+                    <button disabled={busy || !user.active} onClick={() => void handleResetLink(user)} className="rounded-lg border border-slate-700 px-3 py-2 text-xs font-medium text-slate-200 hover:border-emerald-600 hover:text-emerald-300 disabled:opacity-50">
+                      Generate reset link
+                    </button>
+                    <button
+                      disabled={busy || user.id === currentUserId}
+                      onClick={() => void handleDeleteUser(user)}
+                      title={user.id === currentUserId ? 'You cannot delete your own account' : 'Permanently delete account'}
+                      aria-label={`Permanently delete ${user.email}`}
+                      className="inline-flex items-center gap-1.5 rounded-lg border border-red-900/70 px-3 py-2 text-xs font-medium text-red-300 hover:border-red-600 hover:bg-red-950/40 disabled:opacity-50"
+                    >
+                      {busy ? <LoaderCircle className="h-3.5 w-3.5 animate-spin" /> : <Trash2 className="h-3.5 w-3.5" />}
+                      Delete
+                    </button>
+                  </div>
                 </div>
               ))}
               {!users.length && !error && <p className="px-4 py-5 text-sm text-slate-500">No accounts found.</p>}
             </div>
           </div>
-          <p className="text-xs leading-relaxed text-slate-500">Links are shown only once and expire after 30 minutes. Share them with the intended user through a secure channel.</p>
+          <p className="text-xs leading-relaxed text-slate-500">Links are shown only once and expire after 30 minutes. Deleting an account permanently removes its login and reset tokens, revokes active sessions, and does not delete historical job data. The signed-in account and last active administrator cannot be deleted.</p>
         </div>
       </section>
     </div>

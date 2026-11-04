@@ -139,7 +139,7 @@ export const Header: React.FC<HeaderProps> = ({
         </div>
       </div>
     </header>
-    {isUserManagerOpen && <AdminUsersModal onClose={() => setIsUserManagerOpen(false)} />}
+    {isUserManagerOpen && <AdminUsersModal currentUserId={user.id} onClose={() => setIsUserManagerOpen(false)} />}
     {activeTab === 'viewer' && (
       <div className="bg-white/95 dark:bg-slate-900/95 border-b border-slate-200/80 dark:border-slate-800 px-4 sm:px-8 py-5 flex items-center justify-between gap-4 transition-colors">
         <div className="flex flex-col items-start gap-3 min-w-0">
